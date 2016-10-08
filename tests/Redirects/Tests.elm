@@ -72,7 +72,7 @@ all =
                             filterRule "/foo qux=quux /bar 302!"
                     in
                         expectParsedRule rule <|
-                            \rule -> Expect.equal ( 302, True ) ( rule.target.status, rule.target.force )
+                            \rule -> Expect.equal ( 302, True, False ) ( rule.target.status, rule.target.force, rule.target.proxy )
             , test "origin URL, parameters, target URL, status and filters" <|
                 \() ->
                     let
@@ -81,6 +81,14 @@ all =
                     in
                         expectParsedRule rule <|
                             \rule -> Expect.equal (Dict.fromList [ ( "Country", "en,es" ), ( "Language", "es" ) ]) (rule.filters)
+            , test "origin URL and proxy target" <|
+                \() ->
+                    let
+                        rule =
+                            filterRule "/foo http://foo.com/bar 200"
+                    in
+                        expectParsedRule rule <|
+                            \rule -> Expect.equal ( 200, True ) ( rule.target.status, rule.target.proxy )
             ]
         ]
 
