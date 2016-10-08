@@ -1,4 +1,4 @@
-module Redirects.Parser exposing (Rule, Target, Conditions, filterRule, parseRule, parseStatus)
+module Redirects.Parser exposing (Rule, Target, Conditions, filterRules, filterRule, parseRule, parseStatus)
 
 import Dict exposing (Dict)
 import Erl exposing (Url)
@@ -27,8 +27,17 @@ type alias Conditions =
     Dict String String
 
 
-filterRule : String -> Maybe (Result String Rule)
-filterRule rule =
+filterRules : String -> List (Result String Rule)
+filterRules rules =
+    let
+        cleanRules =
+            String.lines rules |> List.filterMap (\x -> cleanRule x)
+    in
+        List.map filterRule cleanRules
+
+
+cleanRule : String -> Maybe String
+cleanRule rule =
     let
         trimmed =
             trim rule
@@ -36,12 +45,17 @@ filterRule rule =
         if isEmpty trimmed || startsWith "#" trimmed then
             Nothing
         else
-            case trimmed |> words |> takeWhile notComment of
-                [] ->
-                    Nothing
+            Just trimmed
 
-                head :: tail ->
-                    Just (parseRule head tail)
+
+filterRule : String -> Result String Rule
+filterRule rule =
+    case rule |> words |> takeWhile notComment of
+        [] ->
+            Err "invalid origin URL"
+
+        head :: tail ->
+            parseRule head tail
 
 
 parseRule : String -> List String -> Result String Rule

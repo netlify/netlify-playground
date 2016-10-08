@@ -30,11 +30,11 @@ all =
             ]
         , describe "filtering rules"
             [ test "giberish" <|
-                \() -> Expect.equal (Just (Err "invalid origin URL")) (filterRule "asdasdfasdf")
+                \() -> Expect.equal (Err "invalid origin URL") (filterRule "asdasdfasdf")
             , test "only origin URL" <|
-                \() -> Expect.equal (Just (Err "target URL is missing")) (filterRule "/foo")
+                \() -> Expect.equal (Err "target URL is missing") (filterRule "/foo")
             , test "only origin URL and params" <|
-                \() -> Expect.equal (Just (Err "target URL is missing")) (filterRule "/foo bar=baz qux=quux")
+                \() -> Expect.equal (Err "target URL is missing") (filterRule "/foo bar=baz qux=quux")
             , test "origin URL and target URL" <|
                 \() ->
                     let
@@ -85,14 +85,11 @@ all =
         ]
 
 
-expectParsedRule : Maybe (Result String Rule) -> (Rule -> Expect.Expectation) -> Expect.Expectation
+expectParsedRule : Result String Rule -> (Rule -> Expect.Expectation) -> Expect.Expectation
 expectParsedRule maybeRule expectation =
     case maybeRule of
-        Nothing ->
-            Expect.fail "should return a rule"
-
-        Just (Err msg) ->
+        Err msg ->
             Expect.fail ("should not return a parsing error, got: " ++ msg)
 
-        Just (Ok rule) ->
+        Ok rule ->
             expectation rule

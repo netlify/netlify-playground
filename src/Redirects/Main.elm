@@ -82,7 +82,7 @@ view model =
 parse : Model -> Html msg
 parse model =
     let
-        rules =
+        rules = filterRules model.updatedRules |> List.map renderRule
             String.lines model.updatedRules
                 |> List.filterMap filterRule
                 |> List.map renderRule
