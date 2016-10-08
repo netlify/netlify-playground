@@ -1,0 +1,13 @@
+sudo: false
+
+env:
+  ELM_VERSION=0.17.0
+
+language: node_js
+node_js:
+  "6"
+
+install:
+  - npm -g install elm@$ELM_VERSION elm-test
+  - make deps
+script: make all
