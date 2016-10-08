@@ -1,4 +1,4 @@
-module Redirects.Parser exposing (Rule, filterRule, parseRule, parseStatus)
+module Redirects.Parser exposing (Rule, Target, Conditions, filterRule, parseRule, parseStatus)
 
 import Dict exposing (Dict)
 import Erl exposing (Url)
@@ -156,4 +156,4 @@ notComment part =
 
 notValidStatus : String -> Bool
 notValidStatus status =
-    not (Regex.contains (regex "(200|301|302|404)!?") status)
+    not (Regex.contains (regex "(200|301|302|303|404)!?") status)
