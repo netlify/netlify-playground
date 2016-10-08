@@ -20,6 +20,7 @@ type alias Target =
     { url : Url
     , status : Int
     , force : Bool
+    , proxy : Bool
     }
 
 
@@ -129,8 +130,14 @@ newTarget target status =
     let
         ( code, force ) =
             parseStatus status
+
+        url =
+            Erl.parse target
+
+        proxy =
+            (fullUrl url.protocol) && code == 200
     in
-        (Target (Erl.parse target) code force)
+        (Target url code force proxy)
 
 
 parseConditions : List String -> Conditions
@@ -170,4 +177,9 @@ notComment part =
 
 notValidStatus : String -> Bool
 notValidStatus status =
-    not (Regex.contains (regex "(200|301|302|303|404)!?") status)
+    not (Regex.contains (regex "(200|301|302|303|307|404)!?") status)
+
+
+fullUrl : String -> Bool
+fullUrl protocol =
+    Regex.contains (regex "^https?") protocol
