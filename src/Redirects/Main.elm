@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onSubmit, onInput)
 import String
 import List
-import Redirects.Parser exposing (Rule, filterRule)
+import Redirects.Parser exposing (Rule, filterRules)
 import Erl
 
 
@@ -82,9 +82,8 @@ view model =
 parse : Model -> Html msg
 parse model =
     let
-        rules = filterRules model.updatedRules |> List.map renderRule
-            String.lines model.updatedRules
-                |> List.filterMap filterRule
+        rules =
+            filterRules model.updatedRules
                 |> List.map renderRule
     in
         div [] rules

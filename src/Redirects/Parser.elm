@@ -31,7 +31,7 @@ filterRules : String -> List (Result String Rule)
 filterRules rules =
     let
         cleanRules =
-            String.lines rules |> List.filterMap (\x -> cleanRule x)
+            String.lines rules |> List.filterMap cleanRule
     in
         List.map filterRule cleanRules
 
