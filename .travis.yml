@@ -7,6 +7,11 @@ language: node_js
 node_js:
   "6"
 
+cache:
+  directories:
+    - elm-stuff/build-artifacts
+    - tests/elm-stuff/build-artifacts
+
 install:
   - npm -g install elm@$ELM_VERSION elm-test
   - make deps
