@@ -9,7 +9,7 @@ build: ## Build binaries.
 	elm-make src/**/*.elm
 
 deps: ## Install dependencies.
-	elm-package install --yes
+	elm-package install --yes && cd tests && elm-package install --yes
 
 test: ## Run tests.
 	elm-test tests/Main.elm
