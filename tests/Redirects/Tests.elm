@@ -89,6 +89,14 @@ all =
                     in
                         expectParsedRule rule <|
                             \rule -> Expect.equal ( 200, True ) ( rule.target.status, rule.target.proxy )
+            , test "ignore inline comments" <|
+                \() ->
+                    let
+                        rule =
+                            filterRule "/foo /bar 302! # Country=en,es Language=es"
+                    in
+                        expectParsedRule rule <|
+                            \rule -> Expect.equal Dict.empty rule.filters
             ]
         ]
 
