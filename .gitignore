@@ -1,2 +1,4 @@
 target
 elm-stuff
+node_modules
+dist

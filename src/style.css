@@ -1,0 +1,66 @@
+#app {
+  padding-top: 0;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+main {
+  margin: 1em 2em;
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+  border: 3px solid #ebebeb;
+  border-radius: 3px;
+  overflow-y: auto;
+  height: 90%;
+}
+
+.header-nav.global-nav {
+  padding: 1em 2em;
+  max-width: unset;
+}
+
+/* Editor */
+
+.elm-ace {
+  width: 100%;
+  position: relative;
+  flex: 1 60%;
+}
+
+.elm-ace.ace_editor {
+  font-size: 14px;
+}
+
+.elm-ace.ace_editor .ace_gutter {
+  border-right: 1px solid #ebebeb;
+  background-color: white;
+}
+
+.elm-ace.ace_editor .ace_gutter,
+.elm-ace.ace_editor .ace_scroller {
+  padding-top: .4em;
+}
+
+.elm-ace.ace_editor .ace_gutter-active-line{
+  background-color: white;
+  border-right: none;
+}
+
+.elm-ace.ace_editor .ace_scroller.ace_scroll-left {
+  box-shadow: none;
+}
+
+/* Results */
+
+.results {
+  flex: 1 40%;
+}
+
+.results.empty-data {
+  display: none;
+  border-radius: 0 0 3px 3px;
+}

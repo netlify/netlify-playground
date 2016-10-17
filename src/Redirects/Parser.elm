@@ -1,11 +1,14 @@
-module Redirects.Parser exposing (Rule, Target, Conditions, filterRules, filterRule, parseRule, parseStatus)
+module Redirects.Parser exposing (Rule, Target, Conditions, parseRedirects, filterRules, filterRule, parseRule, parseStatus)
 
+import Html exposing (Html, div, text)
+import Html.Attributes exposing (..)
 import Dict exposing (Dict)
 import Erl exposing (Url)
 import List
 import List.Extra exposing (stripPrefix, takeWhile)
 import Regex exposing (regex)
 import String exposing (split, startsWith, words, trim, isEmpty)
+import Models exposing (Rules)
 
 
 type alias Rule =
@@ -26,6 +29,33 @@ type alias Target =
 
 type alias Conditions =
     Dict String String
+
+
+parseRedirects : Rules -> Html msg
+parseRedirects model =
+    let
+        rules =
+            filterRules model.updatedText
+                |> List.map renderRule
+    in
+        if List.length rules == 0 then
+            div [ class "results empty-data" ] rules
+        else
+            div [ class "results" ] rules
+
+
+renderRule : Result String Rule -> Html msg
+renderRule rule =
+    case rule of
+        Err msg ->
+            div [ style [ ( "color", "red" ) ] ]
+                [ div [] [ text msg ]
+                ]
+
+        Ok rule ->
+            div [ style [ ( "color", "green" ) ] ]
+                [ div [] [ text ("origin: " ++ (Erl.toString rule.origin)) ]
+                ]
 
 
 filterRules : String -> List (Result String Rule)
