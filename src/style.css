@@ -71,6 +71,11 @@ main {
   box-shadow: none;
 }
 
+.elm-ace.ace_editor .ace_marker-layer .ace_selection,
+.elm-ace.ace_editor .ace_marker-layer .ace_selected-word {
+  background: #00C7B7;
+}
+
 /* Results */
 
 .results {
