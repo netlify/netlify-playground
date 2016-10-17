@@ -23,6 +23,23 @@ main {
   max-width: unset;
 }
 
+/* Welcome */
+
+.central-message {
+  font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
+  justify-content: center;
+  align-items: center;
+}
+
+.central-message p {
+  margin-top: .5em;
+  margin-bottom: .5em;
+}
+
+.central-message .title {
+  margin-bottom: 1em;
+}
+
 /* Editor */
 
 .elm-ace {
