@@ -44,8 +44,8 @@ showButton maybe =
                 ]
 
 
-editor : Rules -> Html Msg
-editor model =
+editor : Rules -> String -> Html Msg
+editor model placeholder =
     Ace.toHtml
         [ Ace.onSourceChange RulesChanged
         , Ace.value model.text
@@ -53,5 +53,6 @@ editor model =
         , Ace.highlightActiveLine False
         , Ace.useSoftTabs False
         , Ace.showPrintMargin False
+        , Ace.placeholder placeholder
         ]
         []

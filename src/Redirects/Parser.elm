@@ -1,7 +1,5 @@
-module Redirects.Parser exposing (Rule, Target, Conditions, parseRedirects, filterRules, filterRule, parseRule, parseStatus)
+module Redirects.Parser exposing (Response, ParseResult, Rule, Target, Conditions, filterRules, filterRule, parseRule, parseStatus)
 
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (..)
 import Dict exposing (Dict)
 import Erl exposing (Url)
 import List
@@ -9,6 +7,18 @@ import List.Extra exposing (stripPrefix, takeWhile)
 import Regex exposing (regex)
 import String exposing (split, startsWith, words, trim, isEmpty)
 import Models exposing (Rules)
+
+
+type alias Response =
+    { results : List ParseResult
+    , errors : List ParseResult
+    }
+
+
+type alias ParseResult =
+    { rule : String
+    , result : Result String Rule
+    }
 
 
 type alias Rule =
@@ -31,40 +41,19 @@ type alias Conditions =
     Dict String String
 
 
-parseRedirects : Rules -> Html msg
-parseRedirects model =
-    let
-        rules =
-            filterRules model.updatedText
-                |> List.map renderRule
-    in
-        if List.length rules == 0 then
-            div [ class "results empty-data" ] rules
-        else
-            div [ class "results" ] rules
-
-
-renderRule : Result String Rule -> Html msg
-renderRule rule =
-    case rule of
-        Err msg ->
-            div [ style [ ( "color", "red" ) ] ]
-                [ div [] [ text msg ]
-                ]
-
-        Ok rule ->
-            div [ style [ ( "color", "green" ) ] ]
-                [ div [] [ text ("origin: " ++ (Erl.toString rule.origin)) ]
-                ]
-
-
-filterRules : String -> List (Result String Rule)
+filterRules : String -> Response
 filterRules rules =
     let
         cleanRules =
             String.lines rules |> List.filterMap cleanRule
+
+        results =
+            List.map filterRule cleanRules
+
+        errors =
+            List.filter filterError results
     in
-        List.map filterRule cleanRules
+        Response results errors
 
 
 cleanRule : String -> Maybe String
@@ -79,20 +68,24 @@ cleanRule rule =
             Just trimmed
 
 
-filterRule : String -> Result String Rule
+filterRule : String -> ParseResult
 filterRule rule =
     case rule |> words |> takeWhile notComment of
         [] ->
-            Err "invalid origin URL"
+            ParseResult rule (Err "invalid origin URL, it should either start with / or be an absolute URL")
 
         head :: tail ->
-            parseRule head tail
+            let
+                result =
+                    parseRule head tail
+            in
+                ParseResult rule result
 
 
 parseRule : String -> List String -> Result String Rule
 parseRule origin tail =
     if relative origin then
-        Err "invalid origin URL"
+        Err "invalid origin URL, it should either start with / or be an absolute URL"
     else
         let
             originUrl =
@@ -128,7 +121,7 @@ parseTarget : List String -> Result String Target
 parseTarget ts =
     case ts of
         [] ->
-            Err "target URL is missing"
+            Err "the target URL is missing, it should either start with / or be an absolute URL"
 
         [ t ] ->
             Ok (newTarget t "301")
@@ -213,3 +206,13 @@ notValidStatus status =
 fullUrl : String -> Bool
 fullUrl protocol =
     Regex.contains (regex "^https?") protocol
+
+
+filterError : ParseResult -> Bool
+filterError result =
+    case result.result of
+        Err _ ->
+            True
+
+        Ok _ ->
+            False

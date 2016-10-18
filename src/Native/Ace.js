@@ -41,9 +41,10 @@ function emptyModel() {
 		mode: null,
 		value: null,
 		shared: null,
+		placeholder: null,
 		showPrintMargin: true,
 		highlightActiveLine: true,
-		useSoftTabs: true,
+		useSoftTabs: true
 	};
 }
 
@@ -63,15 +64,17 @@ function extractModel(factList) {
 				model.value = payload.value;
 				break;
 			case "AceShowPrintMargin":
-				model.showPrintMargin = payload.showPrintMargin;
+				model.showPrintMargin = payload.value;
 				break;
 			case "AceHighlightActiveLine":
-				model.highlightActiveLine = payload.highlightActiveLine;
+				model.highlightActiveLine = payload.value;
 				break;
 			case "AceUseSoftTabs":
-				model.useSoftTabs = payload.useSoftTabs;
+				model.useSoftTabs = payload.value;
 				break;
-
+			case "AcePlaceholder":
+				model.placeholder = payload.value;
+				break;
 		}
 		current = current._1;
 	}
@@ -138,6 +141,27 @@ function render(model) {
 		div.dispatchEvent(event);
 		div.value = null;
 	};
+
+	if (model.placeholder) {
+    const placeholder = model.placeholder.replace(/\n\r?/g, "<br>");
+    var updatePlaceholder = function() {
+      var shouldShow = !editor.session.getValue().length;
+      var node = editor.renderer.emptyMessageNode;
+      if (!shouldShow && node) {
+        editor.renderer.scroller.removeChild(editor.renderer.emptyMessageNode);
+        editor.renderer.emptyMessageNode = null;
+      } else if (shouldShow && !node) {
+        node = editor.renderer.emptyMessageNode = document.createElement("div");
+				node.innerHTML = placeholder;
+        node.className = "ace_invisible ace_emptyMessage";
+        node.style.padding = "0 9px";
+        editor.renderer.scroller.appendChild(node);
+			}
+    }
+
+    editor.on("input", updatePlaceholder);
+    setTimeout(updatePlaceholder, 100);
+	}
 
 	// Add debounce, because "change" event is extremelly often
 	// and value of Ace and model can be in different state

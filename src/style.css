@@ -25,19 +25,40 @@ main {
 
 /* Welcome */
 
-.central-message {
+.central-message,
+.results {
   font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
+}
+
+.central-message {
   justify-content: center;
   align-items: center;
 }
 
 .central-message p {
-  margin-top: .5em;
-  margin-bottom: .5em;
+  margin-top: .1em;
+  margin-bottom: 0;
 }
 
 .central-message .title {
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
+}
+
+.central-message .help {
+  margin-top: 1.5em;
+}
+
+.central-message a {
+  color: blue;
+  text-decoration: none;
+}
+
+.central-message a:hover {
+  color: blue;
+}
+
+.central-message a:visited {
+  color: purple;
 }
 
 /* Editor */
@@ -76,10 +97,53 @@ main {
   background: #00C7B7;
 }
 
+.elm-ace.ace_editor .ace_content::selection {
+  color: white;
+}
+
 /* Results */
 
 .results {
   flex: 1 40%;
+  padding: 1em;
+  border-top: 3px solid #ebebeb;
+  position: relative;
+  overflow: auto;
+}
+
+.results > button {
+  background: none;
+  border: none;
+  color: #bcbcbc;
+  font-weight: bold;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.results-header {
+  padding-bottom: 1em;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.25);
+}
+
+.results-header.success {
+  color: green;
+}
+
+.results-header.error {
+  color: red;
+}
+
+.parse-result {
+  padding-top: .5em;
+}
+
+.parse-result.success {
+  color: green;
+}
+
+.parse-result.error {
+  color: red;
 }
 
 .results.empty-data {

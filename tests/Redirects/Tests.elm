@@ -1,7 +1,7 @@
 module Redirects.Tests exposing (..)
 
 import Redirects.Parser exposing (..)
-import Redirects.Parser exposing (Rule, Target)
+import Redirects.Parser exposing (ParseResult, Rule, Target)
 import Test exposing (..)
 import Expect
 import String
@@ -30,11 +30,26 @@ all =
             ]
         , describe "filtering rules"
             [ test "giberish" <|
-                \() -> Expect.equal (Err "invalid origin URL") (filterRule "asdasdfasdf")
+                \() ->
+                    let
+                        rule =
+                            filterRule "asdasdfasdf"
+                    in
+                        Expect.equal (Err "invalid origin URL, it should either start with / or be an absolute URL") rule.result
             , test "only origin URL" <|
-                \() -> Expect.equal (Err "target URL is missing") (filterRule "/foo")
+                \() ->
+                    let
+                        rule =
+                            filterRule "/foo"
+                    in
+                        Expect.equal (Err "the target URL is missing, it should either start with / or be an absolute URL") rule.result
             , test "only origin URL and params" <|
-                \() -> Expect.equal (Err "target URL is missing") (filterRule "/foo bar=baz qux=quux")
+                \() ->
+                    let
+                        rule =
+                            filterRule "/foo bar=baz qux=quux"
+                    in
+                        Expect.equal (Err "the target URL is missing, it should either start with / or be an absolute URL") rule.result
             , test "origin URL and target URL" <|
                 \() ->
                     let
@@ -101,9 +116,9 @@ all =
         ]
 
 
-expectParsedRule : Result String Rule -> (Rule -> Expect.Expectation) -> Expect.Expectation
-expectParsedRule maybeRule expectation =
-    case maybeRule of
+expectParsedRule : ParseResult -> (Rule -> Expect.Expectation) -> Expect.Expectation
+expectParsedRule rule expectation =
+    case rule.result of
         Err msg ->
             Expect.fail ("should not return a parsing error, got: " ++ msg)
 

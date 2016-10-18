@@ -6,7 +6,7 @@ module Ace exposing (..)
 @docs toHtml
 
 # Ace's Attributes
-@docs theme, mode, value, highlightActiveLine, showPrintMargin, useSoftTabs
+@docs theme, mode, value, highlightActiveLine, showPrintMargin, useSoftTabs, placeholder
 
 # Ace's Events
 @docs onSourceChange
@@ -73,6 +73,15 @@ highlightActiveLine val =
 useSoftTabs : Bool -> Attribute msg
 useSoftTabs val =
     Attributes.property "AceUseSoftTabs" (JE.bool val)
+
+
+{-| Attribute to set a placeholder text inside the Ace editor.
+
+    Ace.toHtml [ Ace.placeholder "write here" ] []
+-}
+placeholder : String -> Attribute msg
+placeholder val =
+    Attributes.property "AcePlaceholder" (JE.string val)
 
 
 {-| Values changes listener. It used to get notifications about changes made by user.
