@@ -143,7 +143,7 @@ function render(model) {
 	};
 
 	if (model.placeholder) {
-    const placeholder = model.placeholder.replace(/\n\r?/g, "<br>");
+    const placeholder = model.placeholder.replace(/\n\r?/g, "<br>").replace(/\s/g, "&nbsp;");
     var updatePlaceholder = function() {
       var shouldShow = !editor.session.getValue().length;
       var node = editor.renderer.emptyMessageNode;

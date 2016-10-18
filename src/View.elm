@@ -146,10 +146,11 @@ redirectsPlaceholder =
     """# Redirect rules, use # to write comments
 
 # Book rules:
-/books/grove-high-output-management.html       /books/grove/high-output-management 301        # Simple redirect
-/books/grove-only-the-paranoid-survive.html    /books/grove/only-the-paranoid-survive 301!    # Forced redirect
+/books/grove-high-output-management.html      /books/grove/high-output-management      301    # Simple redirect
+/books/grove-only-the-paranoid-survive.html   /books/grove/only-the-paranoid-survive   301!   # Forced redirect
+/books/meadowns-thinking-in-systems.html      /books/meadowns/thinking-in-systems      303    # See other redirect
 
 # Blog rules:
-/the-art-of-closing    https://blog.jessfraz.com/post/the-art-of-closing 200       # Proxy rule, browser location won't change, only available in PRO plans
-/a-nerd-in-a-cave      http://randsinrepose.com/archives/a-nerd-in-a-cave/ 200!    # Forced proxy rule
+/the-art-of-closing   https://blog.jessfraz.com/post/the-art-of-closing     200    # Proxy rule, browser location won't change, only available in PRO plans
+/a-nerd-in-a-cave     http://randsinrepose.com/archives/a-nerd-in-a-cave/   200!   # Forced proxy rule
 """
