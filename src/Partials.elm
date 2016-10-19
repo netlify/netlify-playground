@@ -8,8 +8,8 @@ import Messages exposing (..)
 import Ace
 
 
-pageHeader : Rules -> Maybe (Html Msg) -> Html Msg
-pageHeader model button =
+pageHeader : Rules -> Maybe (List ( String, String )) -> Maybe (Html Msg) -> Html Msg
+pageHeader model links button =
     header
         [ id "header"
         , class "full-width header"
@@ -27,9 +27,25 @@ pageHeader model button =
                 , attribute "data-letters" "Redirects"
                 ]
                 [ text "Redirects" ]
+            , showLinks links
             , showButton button
             ]
         ]
+
+
+showLinks : Maybe (List ( String, String )) -> Html Msg
+showLinks maybe =
+    case maybe of
+        Nothing ->
+            span [] []
+
+        Just list ->
+            span [] (List.map link list)
+
+
+link : ( String, String ) -> Html Msg
+link ( name, url ) =
+    a [ href url, class "nav-item", attribute "data-letters" name ] [ text name ]
 
 
 showButton : Maybe (Html Msg) -> Html Msg

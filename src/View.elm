@@ -28,7 +28,7 @@ view model =
 notFoundView : Rules -> Html Msg
 notFoundView model =
     div []
-        [ Partials.pageHeader model Nothing
+        [ Partials.pageHeader model Nothing Nothing
         , main'
             [ class "central-message" ]
             [ div [ class "title" ]
@@ -40,7 +40,7 @@ notFoundView model =
 homeView : Rules -> Html Msg
 homeView model =
     div []
-        [ Partials.pageHeader model Nothing
+        [ Partials.pageHeader model Nothing Nothing
         , main'
             [ class "central-message" ]
             [ div [ class "title" ]
@@ -71,14 +71,21 @@ homeView model =
 
 redirectsView : Rules -> Html Msg
 redirectsView model =
-    div [ class "main" ]
-        [ Partials.pageHeader model (Just (parseRedirectsButton model))
-        , main'
-            []
-            [ Partials.editor model redirectsPlaceholder
-            , parseRedirects model
+    let
+        button =
+            Just (parseRedirectsButton model)
+
+        links =
+            Just [ ( "Docs", "https://www.netlify.com/docs/redirects" ) ]
+    in
+        div [ class "main" ]
+            [ Partials.pageHeader model links button
+            , main'
+                []
+                [ Partials.editor model redirectsPlaceholder
+                , parseRedirects model
+                ]
             ]
-        ]
 
 
 parseRedirectsButton : Rules -> Html Msg
