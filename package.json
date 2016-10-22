@@ -9,7 +9,7 @@
   "scripts": {
     "build": "webpack",
     "watch": "webpack --watch",
-    "dev": "webpack-dev-server --port 8000",
+    "start": "webpack-dev-server --port 8000",
     "test": "make test"
   },
   "repository": {
