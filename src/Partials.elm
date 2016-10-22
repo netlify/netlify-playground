@@ -27,9 +27,16 @@ pageHeader model links button =
                 , attribute "data-letters" "Redirects"
                 ]
                 [ text "Redirects" ]
-            , showLinks links
-            , showButton button
+            , showExtras links button
             ]
+        ]
+
+
+showExtras : Maybe (List ( String, String )) -> Maybe (Html Msg) -> Html Msg
+showExtras links button =
+    div [ class "nav-ctas" ]
+        [ showLinks links
+        , showButton button
         ]
 
 
@@ -52,12 +59,10 @@ showButton : Maybe (Html Msg) -> Html Msg
 showButton maybe =
     case maybe of
         Nothing ->
-            div [] []
+            span [] []
 
         Just button ->
-            div [ class "nav-ctas" ]
-                [ button
-                ]
+            button
 
 
 editor : Rules -> String -> Html Msg
