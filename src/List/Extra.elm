@@ -1,15 +1,22 @@
 module List.Extra exposing (..)
 
--- List.Extra
-
 {-| Take elements in order as long as the predicate evaluates to `True`
 -}
+
+-- List.Extra
+
+
 takeWhile : (a -> Bool) -> List a -> List a
 takeWhile predicate list =
-  case list of
-    []      -> []
-    x::xs   -> if (predicate x) then x :: takeWhile predicate xs
-               else []
+    case list of
+        [] ->
+            []
+
+        x :: xs ->
+            if (predicate x) then
+                x :: takeWhile predicate xs
+            else
+                []
 
 
 {-| Drop the given prefix from the list. If the list doesn't start with that prefix, return `Nothing`.
@@ -21,11 +28,19 @@ takeWhile predicate list =
 -}
 stripPrefix : List a -> List a -> Maybe (List a)
 stripPrefix prefix xs =
-  let
-    step e m =
-      case m of
-        Nothing -> Nothing
-        Just [] -> Nothing
-        Just (x::xs') -> if e == x then Just xs' else Nothing
-  in
-    List.foldl step (Just xs) prefix
+    let
+        step e m =
+            case m of
+                Nothing ->
+                    Nothing
+
+                Just [] ->
+                    Nothing
+
+                Just (x :: xs_) ->
+                    if e == x then
+                        Just xs_
+                    else
+                        Nothing
+    in
+        List.foldl step (Just xs) prefix

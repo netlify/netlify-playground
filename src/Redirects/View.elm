@@ -21,7 +21,7 @@ render model =
     in
         div [ class "main" ]
             [ Partials.pageHeader model links button
-            , main'
+            , main_
                 []
                 [ Partials.editor model redirectsPlaceholder
                 , parseRedirects model
@@ -56,7 +56,7 @@ showRedirectsResult response =
         [ (redirectsResultHeader response)
         , div [ class "results-list" ] (List.map renderErrorRule response.errors)
         , button
-            [ type' "button"
+            [ type_ "button"
             , title "Close results panel"
             , onClick (ParseRedirects "")
             ]
