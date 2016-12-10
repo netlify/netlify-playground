@@ -22,7 +22,7 @@ pageHeader model links button =
                 ]
                 [ text "Netlify's Playground" ]
             , a
-                [ onClick ShowRedirects
+                [ onClick (NewUrl "/redirects")
                 , class "nav-item"
                 , attribute "data-letters" "Redirects"
                 ]

@@ -10,13 +10,6 @@ type alias Rules =
 
 
 type alias Model =
-    { route : Routing.Route
+    { history : List (Maybe Routing.Route)
     , rules : Rules
-    }
-
-
-initialModel : Routing.Route -> Model
-initialModel route =
-    { route = route
-    , rules = Rules "" ""
     }

@@ -13,22 +13,29 @@ import Redirects.View
 
 view : Model -> Html Msg
 view model =
-    case model.route of
-        RedirectsRoute ->
-            Redirects.View.render model.rules
-
-        HomeRoute ->
+    case model.history of
+        [] ->
             homeView model.rules
 
-        NotFoundRoute ->
-            notFoundView model.rules
+        current :: _ ->
+            case current of
+                Nothing ->
+                    homeView model.rules
+
+                Just route ->
+                    case route of
+                        Redirects ->
+                            Redirects.View.render model.rules
+
+                        Home ->
+                            homeView model.rules
 
 
 notFoundView : Rules -> Html Msg
 notFoundView model =
     div []
         [ Partials.pageHeader model Nothing Nothing
-        , main'
+        , main_
             [ class "central-message" ]
             [ div [ class "title" ]
                 [ text "This is not the place you're looking for" ]
@@ -40,7 +47,7 @@ homeView : Rules -> Html Msg
 homeView model =
     div []
         [ Partials.pageHeader model Nothing Nothing
-        , main'
+        , main_
             [ class "central-message" ]
             [ div [ class "title" ]
                 [ text "PLAY - Netlify's Playground" ]
@@ -59,7 +66,7 @@ homeView model =
                 [ span []
                     [ text "go to "
                     , a
-                        [ onClick ShowRedirects ]
+                        [ onClick (NewUrl "/redirects") ]
                         [ text "redirects" ]
                     , text " to test your _redirects rules"
                     ]

@@ -1,9 +1,11 @@
 module Messages exposing (..)
 
+import Navigation
 import Redirects.Messages
 
 
 type Msg
-    = ShowRedirects
+    = NewUrl String
+    | UrlChange Navigation.Location
     | ParseRedirects String
     | RulesChanged String

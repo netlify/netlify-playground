@@ -5,7 +5,6 @@ import Json.Encode exposing (Value)
 import Redirects.Tests
 
 
-main : Program Value
 main =
     run emit Redirects.Tests.all
 
