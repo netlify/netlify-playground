@@ -10,7 +10,8 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "start": "webpack-dev-server --port 8000",
-    "test": "make test"
+    "test": "make test",
+    "copy-redirects": "cp _redirects dist/"
   },
   "repository": {
     "type": "git",
