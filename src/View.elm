@@ -9,6 +9,7 @@ import Routing exposing (Route(..))
 import Models exposing (Rules)
 import Partials
 import Redirects.View
+import Headers.View
 
 
 view : Model -> Html Msg
@@ -26,6 +27,9 @@ view model =
                     case route of
                         Redirects ->
                             Redirects.View.render model.rules
+
+                        Headers ->
+                            Headers.View.render model.rules
 
                         Home ->
                             homeView model.rules

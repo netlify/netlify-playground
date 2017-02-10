@@ -7,5 +7,6 @@ import Redirects.Messages
 type Msg
     = NewUrl String
     | UrlChange Navigation.Location
-    | ParseRedirects String
     | RulesChanged String
+    | ParseRedirects String
+    | ParseHeaders String

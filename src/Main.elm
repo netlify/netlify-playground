@@ -29,12 +29,20 @@ update msg model =
             ( model, Navigation.newUrl url )
 
         UrlChange location ->
-            ( { model | history = UrlParser.parsePath route location :: model.history }, Cmd.none )
+            ( { model
+                | history = UrlParser.parsePath route location :: model.history
+                , rules = Rules "" ""
+              }
+            , Cmd.none
+            )
 
         RulesChanged newRules ->
             { model | rules = Rules newRules model.rules.updatedText } ! []
 
         ParseRedirects newRules ->
+            { model | rules = Rules model.rules.text newRules } ! []
+
+        ParseHeaders newRules ->
             { model | rules = Rules model.rules.text newRules } ! []
 
 

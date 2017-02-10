@@ -145,19 +145,21 @@ function render(model) {
 	if (model.placeholder) {
       var placeholder = model.placeholder.replace(/\n\r?/g, "<br>").replace(/\s/g, "&nbsp;");
       var updatePlaceholder = function() {
-      var shouldShow = !editor.session.getValue().length;
-      var node = editor.renderer.emptyMessageNode;
-      if (!shouldShow && node) {
-        editor.renderer.scroller.removeChild(editor.renderer.emptyMessageNode);
-        editor.renderer.emptyMessageNode = null;
-      } else if (shouldShow && !node) {
-        node = editor.renderer.emptyMessageNode = document.createElement("div");
-				node.innerHTML = placeholder;
-        node.className = "ace_invisible ace_emptyMessage";
-        node.style.padding = "0 9px";
-        editor.renderer.scroller.appendChild(node);
-			}
-    }
+        var shouldShow = !editor.session.getValue().length;
+        var node = editor.renderer.emptyMessageNode;
+
+        if (!shouldShow && node) {
+          editor.renderer.scroller.removeChild(editor.renderer.emptyMessageNode);
+          editor.renderer.emptyMessageNode = null;
+        } else if (shouldShow && !node) {
+          node = editor.renderer.emptyMessageNode = document.createElement("div");
+          node.id = "ace_editor_placeholder";
+          node.innerHTML = placeholder;
+          node.className = "ace_invisible ace_emptyMessage";
+          node.style.padding = "0 9px";
+          editor.renderer.scroller.appendChild(node);
+        }
+      }
 
     editor.on("input", updatePlaceholder);
     setTimeout(updatePlaceholder, 100);
@@ -192,6 +194,15 @@ function diff(prev, next) {
 		if (nm.value != null) {
 			editor.setValue(nm.value, pos);
 		}
+	}
+
+	if (nm.placeholder !== pm.placeholder) {
+		var placeholder = nm.placeholder.replace(/\n\r?/g, "<br>").replace(/\s/g, "&nbsp;");
+		var node = editor.renderer.emptyMessageNode;
+		if (node) {
+			node.innerHTML = placeholder;
+		}
+		editor.focus();
 	}
 
 	// Keep reference to shared state
