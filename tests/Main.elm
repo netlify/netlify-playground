@@ -1,12 +1,13 @@
 port module Main exposing (..)
 
-import Test.Runner.Node exposing (run)
+import Tests
+import Test.Runner.Node exposing (run, TestProgram)
 import Json.Encode exposing (Value)
-import Redirects.Tests
 
 
+main : TestProgram
 main =
-    run emit Redirects.Tests.all
+    run emit Tests.suite
 
 
 port emit : ( String, Value ) -> Cmd msg

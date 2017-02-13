@@ -3,7 +3,8 @@ module Partials exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
-import Models exposing (Rules)
+import Messages exposing (Msg)
+import Models exposing (Binding, Rules)
 import Messages exposing (..)
 import Ace
 
@@ -27,6 +28,12 @@ pageHeader model links button =
                 , attribute "data-letters" "Redirects"
                 ]
                 [ text "Redirects" ]
+            , a
+                [ onClick (NewUrl "/headers")
+                , class "nav-item"
+                , attribute "data-letters" "Headers"
+                ]
+                [ text "Headers" ]
             , showExtras links button
             ]
         ]
@@ -77,3 +84,58 @@ editor model placeholder =
         , Ace.placeholder placeholder
         ]
         []
+
+
+parseTestButton : Rules -> (String -> Msg) -> Html Msg
+parseTestButton rules msg =
+    Html.a
+        [ class "nav-item smaller btn-primary nav-cta"
+        , onClick (msg rules.text)
+        ]
+        [ text "Test rules" ]
+
+
+renderPage : Binding -> Html Msg
+renderPage binding =
+    let
+        model =
+            binding.model
+
+        button =
+            Just (parseTestButton model binding.message)
+
+        links =
+            Just [ ( "Docs", binding.docsLink ) ]
+    in
+        div [ class "main" ]
+            [ pageHeader model links button
+            , main_
+                []
+                [ editor model binding.placeholder
+                , binding.parse model
+                ]
+            ]
+
+
+renderResults : Html Msg -> List (Html Msg) -> (String -> Msg) -> Html Msg
+renderResults header errors message =
+    div [ class "results" ]
+        [ header
+        , div [ class "results-list" ] errors
+        , button
+            [ type_ "button"
+            , title "Close results panel"
+            , onClick (message "")
+            ]
+            [ text "x" ]
+        ]
+
+
+resultHeader : String -> Int -> Html msg
+resultHeader name count =
+    if count > 0 then
+        div [ class "results-header error" ]
+            [ text ("Oh no! We found " ++ toString count ++ " errors") ]
+    else
+        div [ class "results-header success" ]
+            [ text ("Yay! All " ++ name ++ " are valid") ]

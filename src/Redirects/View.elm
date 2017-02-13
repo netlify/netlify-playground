@@ -13,29 +13,15 @@ import Erl
 render : Rules -> Html Msg
 render model =
     let
-        button =
-            Just (parseRedirectsButton model)
-
-        links =
-            Just [ ( "Docs", "https://www.netlify.com/docs/redirects" ) ]
+        binding =
+            { model = model
+            , message = ParseRedirects
+            , docsLink = "https://www.netlify.com/docs/redirects"
+            , placeholder = redirectsPlaceholder
+            , parse = parseRedirects
+            }
     in
-        div [ class "main" ]
-            [ Partials.pageHeader model links button
-            , main_
-                []
-                [ Partials.editor model redirectsPlaceholder
-                , parseRedirects model
-                ]
-            ]
-
-
-parseRedirectsButton : Rules -> Html Msg
-parseRedirectsButton rules =
-    Html.a
-        [ class "nav-item smaller btn-primary nav-cta"
-        , onClick (ParseRedirects rules.text)
-        ]
-        [ text "Test rules" ]
+        Partials.renderPage binding
 
 
 parseRedirects : Rules -> Html Msg
@@ -47,21 +33,7 @@ parseRedirects model =
         if List.length response.results == 0 then
             div [ class "results empty-data" ] []
         else
-            showRedirectsResult response
-
-
-showRedirectsResult : Response -> Html Msg
-showRedirectsResult response =
-    div [ class "results" ]
-        [ (redirectsResultHeader response)
-        , div [ class "results-list" ] (List.map renderErrorRule response.errors)
-        , button
-            [ type_ "button"
-            , title "Close results panel"
-            , onClick (ParseRedirects "")
-            ]
-            [ text "x" ]
-        ]
+            Partials.renderResults (resultsHeader response) (List.map renderErrorRule response.errors) ParseRedirects
 
 
 renderErrorRule : ParseResult -> Html msg
@@ -76,18 +48,9 @@ renderErrorRule parse =
             div [] []
 
 
-redirectsResultHeader : Response -> Html msg
-redirectsResultHeader response =
-    let
-        count =
-            List.length response.errors
-    in
-        if count > 0 then
-            div [ class "results-header error" ]
-                [ text ("Oh no! We found " ++ toString count ++ " errors") ]
-        else
-            div [ class "results-header success" ]
-                [ text "Yay! All redirects are valid" ]
+resultsHeader : Response -> Html msg
+resultsHeader response =
+    Partials.resultHeader "redirects" (List.length response.errors)
 
 
 redirectsPlaceholder =

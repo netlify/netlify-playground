@@ -9,8 +9,8 @@ import Erl
 import Dict
 
 
-all : Test
-all =
+suite : Test
+suite =
     describe "The Redirects Parser"
         [ describe "parsing status codes"
             [ test "giberish" <|
