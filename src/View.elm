@@ -76,4 +76,14 @@ homeView model =
                     ]
                 ]
             ]
+            , p [ class "help" ]
+                [ span []
+                    [ text "go to "
+                    , a
+                        [ onClick (NewUrl "/headers") ]
+                        [ text "headers" ]
+                    , text " to test your _headers rules"
+                    ]
+                ]
+            ]
         ]
