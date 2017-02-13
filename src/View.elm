@@ -75,7 +75,6 @@ homeView model =
                     , text " to test your _redirects rules"
                     ]
                 ]
-            ]
             , p [ class "help" ]
                 [ span []
                     [ text "go to "
