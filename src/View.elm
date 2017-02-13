@@ -66,17 +66,15 @@ homeView model =
                     , text " and freely distributable"
                     ]
                 ]
-            , p [ class "help" ]
-                [ span []
+            , div [ class "help" ]
+                [ p []
                     [ text "go to "
                     , a
                         [ onClick (NewUrl "/redirects") ]
                         [ text "redirects" ]
                     , text " to test your _redirects rules"
                     ]
-                ]
-            , p [ class "help" ]
-                [ span []
+                , p []
                     [ text "go to "
                     , a
                         [ onClick (NewUrl "/headers") ]
