@@ -49,7 +49,7 @@ notFoundView model =
 
 homeView : Rules -> Html Msg
 homeView model =
-    div []
+    div [ class "main" ]
         [ Partials.pageHeader model Nothing Nothing
         , main_
             [ class "central-message" ]
