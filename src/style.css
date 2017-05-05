@@ -7,6 +7,10 @@
   margin: 0;
 }
 
+.main {
+  height: 100%;
+}
+
 main {
   margin: 1em 2em;
   flex: 1;
@@ -15,7 +19,8 @@ main {
   border: 3px solid #ebebeb;
   border-radius: 3px;
   overflow-y: auto;
-  height: 90%;
+  height: calc(100% - 2.8em);
+  box-sizing: border-box;
 }
 
 .header-nav.global-nav {
