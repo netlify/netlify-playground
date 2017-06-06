@@ -65,9 +65,9 @@ headersPlaceholder =
 # Examples:
 
 /
-  Link: </styles.css> rel=preload as=stylesheet
-  Link: </main.js> rel=preload as=script
-  Link: </image.jpg> rel=preload as=image
+  Link: &lt;/styles.css&gt; rel=preload as=stylesheet
+  Link: &lt;/main.js&gt; rel=preload as=script
+  Link: &lt;/image.jpg&gt; rel=preload as=image
 /*
   X-XSS-Protection: 1; mode=block
   X-Frame-Option: SAMEORIGIN
