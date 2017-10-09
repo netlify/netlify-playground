@@ -124,19 +124,26 @@ parseTarget ts =
             Err "the target URL is missing, it should either start with / or be an absolute URL"
 
         [ t ] ->
-            Ok (newTarget t "301")
+            Ok (newTarget t 301 False)
 
         [ t, status ] ->
-            Ok (newTarget t status)
+            case parseStatus status of
+                Err err ->
+                    Err err
+
+                Ok ( code, force ) ->
+                    Ok (newTarget t code force)
 
         t :: _ ->
-            Ok (newTarget t "301")
+            Ok (newTarget t 301 False)
 
 
-parseStatus : String -> ( Int, Bool )
+parseStatus : String -> Result String ( Int, Bool )
 parseStatus status =
-    if notValidStatus status then
-        ( 301, False )
+    if isEmpty status then
+        Ok ( 301, False )
+    else if notValidStatus status then
+        Err "the status code is invalid, it should be a number or a number with an exclamation mark after"
     else
         let
             force =
@@ -145,22 +152,19 @@ parseStatus status =
             code =
                 Result.withDefault 301 (String.left 3 status |> String.toInt)
         in
-            ( code, force )
+            Ok ( code, force )
 
 
-newTarget : String -> String -> Target
-newTarget target status =
+newTarget : String -> Int -> Bool -> Target
+newTarget target status force =
     let
-        ( code, force ) =
-            parseStatus status
-
         url =
             Erl.parse target
 
         proxy =
-            (fullUrl url.protocol) && code == 200
+            (fullUrl url.protocol) && status == 200
     in
-        (Target url code force proxy)
+        (Target url status force proxy)
 
 
 parseConditions : List String -> Conditions
@@ -190,7 +194,7 @@ relative part =
 
 validUrlPattern : String -> Bool
 validUrlPattern part =
-    (Regex.contains (regex "^(/|http)") part)
+    (Regex.contains (regex "^(/|https?://)\\w") part)
 
 
 notComment : String -> Bool
@@ -200,7 +204,7 @@ notComment part =
 
 notValidStatus : String -> Bool
 notValidStatus status =
-    not (Regex.contains (regex "(200|301|302|303|307|404)!?") status)
+    not (Regex.contains (regex "^200|301|302|303|307|404!?$") status)
 
 
 fullUrl : String -> Bool
