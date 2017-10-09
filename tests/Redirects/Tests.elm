@@ -119,6 +119,14 @@ suite =
                             filterRule "/blog post=:id /news post=:id 302"
                     in
                         Expect.equal (Err "the status code is invalid, it should be a number or a number with an exclamation mark after") rule.result
+            , test "splat redirect" <|
+                \() ->
+                    let
+                        rule =
+                            filterRule "/* /index.html 200"
+                    in
+                        expectParsedRule rule <|
+                            \rule -> Expect.equal ( 200, False ) ( rule.target.status, rule.target.proxy )
             ]
         ]
 
