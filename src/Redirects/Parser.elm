@@ -4,9 +4,9 @@ import Dict exposing (Dict)
 import Erl exposing (Url)
 import List
 import List.Extra exposing (stripPrefix, takeWhile)
-import Regex exposing (regex)
 import String exposing (split, startsWith, words, trim, isEmpty)
 import Models exposing (Rules)
+import Url exposing (..)
 
 
 type alias Response =
@@ -142,7 +142,7 @@ parseStatus : String -> Result String ( Int, Bool )
 parseStatus status =
     if isEmpty status then
         Ok ( 301, False )
-    else if notValidStatus status then
+    else if (not (validStatus status)) then
         Err "the status code is invalid, it should be a number or a number with an exclamation mark after"
     else
         let
@@ -189,27 +189,12 @@ parseTuple tuple =
 
 relative : String -> Bool
 relative part =
-    not (validUrlPattern part)
-
-
-validUrlPattern : String -> Bool
-validUrlPattern part =
-    (Regex.contains (regex "^(/|https?://)\\w") part)
+    not (validPattern part)
 
 
 notComment : String -> Bool
 notComment part =
     not (startsWith "#" part)
-
-
-notValidStatus : String -> Bool
-notValidStatus status =
-    not (Regex.contains (regex "^200|301|302|303|307|404!?$") status)
-
-
-fullUrl : String -> Bool
-fullUrl protocol =
-    Regex.contains (regex "^https?") protocol
 
 
 filterError : ParseResult -> Bool

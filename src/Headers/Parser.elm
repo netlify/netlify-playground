@@ -7,6 +7,7 @@ import List.Extra
 import Maybe
 import Regex
 import String exposing (split, startsWith, words, trim, isEmpty)
+import Url exposing (validPattern)
 
 
 type alias Values =
@@ -44,7 +45,7 @@ parseRules response lines =
             response
 
         head :: tail ->
-            if startsWith "/" head then
+            if validPattern head then
                 startRule response head tail
             else
                 addHeader response head tail

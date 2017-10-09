@@ -26,6 +26,8 @@ simpleRulesTest =
   X-Foo: Bar
 /*
   X-Bar: Baz
+http://example.com/*
+  X-Baz: Qux
 """
 
         response =
@@ -34,6 +36,7 @@ simpleRulesTest =
         expected =
             [ (Rule "/" (Dict.fromList [ ( "X-Foo", [ "Bar" ] ) ]) [])
             , (Rule "/*" (Dict.fromList [ ( "X-Bar", [ "Baz" ] ) ]) [])
+            , (Rule "http://example.com/*" (Dict.fromList [ ( "X-Baz", [ "Qux" ] ) ]) [])
             ]
     in
         \() -> Expect.equal expected response.rules
