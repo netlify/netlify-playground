@@ -25,7 +25,7 @@ type alias Rule =
     { origin : Url
     , params : Conditions
     , target : Target
-    , filters : Conditions
+    , conditions : Conditions
     }
 
 
