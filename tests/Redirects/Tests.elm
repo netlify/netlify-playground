@@ -14,19 +14,19 @@ suite =
     describe "The Redirects Parser"
         [ describe "parsing status codes"
             [ test "giberish" <|
-                \() -> Expect.equal ( 301, False ) (parseStatus "asdfasdf")
+                \() -> Expect.equal (Err "the status code is invalid, it should be a number or a number with an exclamation mark after") (parseStatus "asdfasdf")
             , test "301" <|
-                \() -> Expect.equal ( 301, False ) (parseStatus "301")
+                \() -> Expect.equal (Ok ( 301, False )) (parseStatus "301")
             , test "301!" <|
-                \() -> Expect.equal ( 301, True ) (parseStatus "301!")
+                \() -> Expect.equal (Ok ( 301, True )) (parseStatus "301!")
             , test "302" <|
-                \() -> Expect.equal ( 302, False ) (parseStatus "302")
+                \() -> Expect.equal (Ok ( 302, False )) (parseStatus "302")
             , test "303" <|
-                \() -> Expect.equal ( 303, False ) (parseStatus "303")
+                \() -> Expect.equal (Ok ( 303, False )) (parseStatus "303")
             , test "200" <|
-                \() -> Expect.equal ( 200, False ) (parseStatus "200")
+                \() -> Expect.equal (Ok ( 200, False )) (parseStatus "200")
             , test "404" <|
-                \() -> Expect.equal ( 404, False ) (parseStatus "404")
+                \() -> Expect.equal (Ok ( 404, False )) (parseStatus "404")
             ]
         , describe "filtering rules"
             [ test "giberish" <|
@@ -112,6 +112,13 @@ suite =
                     in
                         expectParsedRule rule <|
                             \rule -> Expect.equal Dict.empty rule.filters
+            , test "/blog post=:id  /news post=:id 302" <|
+                \() ->
+                    let
+                        rule =
+                            filterRule "/blog post=:id /news post=:id 302"
+                    in
+                        Expect.equal (Err "the status code is invalid, it should be a number or a number with an exclamation mark after") rule.result
             ]
         ]
 
