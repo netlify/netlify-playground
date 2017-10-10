@@ -1,4 +1,4 @@
-module Redirects.Dump exposing (dump)
+module Redirects.Dump exposing (dump, stringRule)
 
 import Dict
 import Erl

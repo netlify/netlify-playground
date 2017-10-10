@@ -143,6 +143,10 @@ main {
   padding-top: .5em;
 }
 
+.parse-result.structured {
+  padding-top: 1em;
+}
+
 .parse-result.success {
   color: green;
 }

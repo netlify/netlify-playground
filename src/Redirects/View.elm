@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Messages exposing (Msg(..))
 import Models exposing (Rules)
+import Redirects.Dump exposing (stringRule)
 import Redirects.Parser exposing (Response, ParseResult, Rule, filterRules)
 import Partials
 import Erl
@@ -30,10 +31,35 @@ parseRedirects model =
         response =
             filterRules model.updatedText
     in
-        if List.length response.results == 0 then
+        if List.isEmpty response.results then
             div [ class "results empty-data" ] []
         else
-            Partials.renderResults (resultsHeader response) (List.map renderErrorRule response.errors) ParseRedirects
+            Partials.renderResults (resultsHeader response) (resultsBody response) ParseRedirects
+
+
+resultsBody : Response -> List (Html msg)
+resultsBody response =
+    if List.isEmpty response.errors then
+        List.map renderSuccessRule response.results
+    else
+        List.map renderErrorRule response.errors
+
+
+renderSuccessRule : ParseResult -> Html msg
+renderSuccessRule parse =
+    case parse.result of
+        Err msg ->
+            div [] []
+
+        Ok rule ->
+            let
+                parts =
+                    String.split "\n" (stringRule rule)
+
+                divs =
+                    List.map (\s -> div [] [ (text s) ]) parts
+            in
+                div [ class "parse-result structured" ] divs
 
 
 renderErrorRule : ParseResult -> Html msg

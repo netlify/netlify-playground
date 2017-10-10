@@ -1,4 +1,4 @@
-module Headers.Dump exposing (dump)
+module Headers.Dump exposing (dump, stringRule)
 
 import Dict exposing (Dict)
 import Headers.Parser exposing (Rule, Values)
