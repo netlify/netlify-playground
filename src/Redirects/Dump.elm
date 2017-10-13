@@ -1,6 +1,6 @@
 module Redirects.Dump exposing (dump, stringRule)
 
-import Dict
+import Dict exposing (Dict)
 import Erl
 import List
 import Redirects.Parser exposing (Rule, Conditions)
@@ -33,36 +33,73 @@ concatRule head tail response =
 stringRule : Rule -> String
 stringRule rule =
     "\n[[redirects]]"
-        ++ "\norigin = \""
+        ++ "\nfrom = \""
         ++ (Erl.toString rule.origin)
         ++ "\""
-        ++ "\nparameters = "
-        ++ (stringConditions rule.params)
-        ++ "\ndestination = \""
+        ++ (mapQuery rule.params "query")
+        ++ "\nto = \""
         ++ (Erl.toString rule.target.url)
         ++ "\""
         ++ "\nstatus = "
         ++ (String.toLower (toString rule.target.status))
         ++ "\nforce = "
         ++ (String.toLower (toString rule.target.force))
-        ++ "\nconditions = "
-        ++ (stringConditions rule.conditions)
+        ++ (mapConditions rule.conditions)
         ++ "\n"
 
 
-stringConditions : Conditions -> String
-stringConditions conditions =
+mapQuery : Conditions -> String -> String
+mapQuery conditions name =
+    if Dict.isEmpty conditions then
+        ""
+    else
+        "\n" ++ name ++ " = " ++ (conditionsToString conditions)
+
+
+mapConditions : Conditions -> String
+mapConditions conditions =
+    if Dict.isEmpty conditions then
+        ""
+    else
+        let
+            signature =
+                Dict.get "Signed" conditions
+
+            filter =
+                Dict.remove "Signed" conditions
+
+            ctos =
+                mapQuery filter "conditions"
+
+            sign =
+                signToString signature
+        in
+            ctos ++ sign
+
+
+signToString : Maybe String -> String
+signToString signature =
+    case signature of
+        Nothing ->
+            ""
+
+        Just value ->
+            "\nsigned = \"" ++ value ++ "\""
+
+
+conditionsToString : Dict String String -> String
+conditionsToString conditions =
     let
         dict =
             Dict.toList conditions
-                |> List.map stringCondition
+                |> List.map conditionToString
                 |> String.join ", "
     in
         "{" ++ dict ++ "}"
 
 
-stringCondition : ( String, String ) -> String
-stringCondition tuple =
+conditionToString : ( String, String ) -> String
+conditionToString tuple =
     let
         ( key, value ) =
             tuple

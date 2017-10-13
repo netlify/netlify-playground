@@ -31,10 +31,10 @@ concatRule head tail response =
 stringRule : Rule -> String
 stringRule rule =
     "\n[[headers]]"
-        ++ "\norigin = \""
+        ++ "\nfor = \""
         ++ rule.path
         ++ "\""
-        ++ "\n[[headers.values]]"
+        ++ "\n[headers.values]"
         ++ (stringValues rule.valid)
         ++ "\n"
 

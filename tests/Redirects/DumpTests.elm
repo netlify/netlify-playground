@@ -19,6 +19,8 @@ suite =
             \() -> Expect.equal ruleWithConditions dumpRuleWithConditions
         , test "multiple rules" <|
             \() -> Expect.equal multipleRules dumpMultipleRules
+        , test "rule with signature" <|
+            \() -> Expect.equal ruleWithSignature dumpRuleWithSignature
         ]
 
 
@@ -75,36 +77,47 @@ dumpMultipleRules =
         dump [ rule1, rule2 ]
 
 
+dumpRuleWithSignature =
+    let
+        target =
+            (Target (Erl.parse "/foo") 301 False False)
+
+        conditions =
+            Dict.fromList [ ( "Signed", "API_SIGNATURE_TOKEN" ) ]
+
+        rule =
+            (Rule (Erl.parse "/") Dict.empty target conditions)
+    in
+        dump [ rule ]
+
+
 simpleRule =
     """
 [[redirects]]
-origin = "/"
-parameters = {}
-destination = "/foo"
+from = "/"
+to = "/foo"
 status = 301
 force = false
-conditions = {}
 """
 
 
 ruleWithParameters =
     """
 [[redirects]]
-origin = "/"
-parameters = {baz = "qux", foo = "bar"}
-destination = "/foo"
+from = "/"
+query = {baz = "qux", foo = "bar"}
+to = "/foo"
 status = 301
 force = false
-conditions = {}
 """
 
 
 ruleWithConditions =
     """
 [[redirects]]
-origin = "/"
-parameters = {baz = "qux", foo = "bar"}
-destination = "/foo"
+from = "/"
+query = {baz = "qux", foo = "bar"}
+to = "/foo"
 status = 301
 force = false
 conditions = {baz = "qux", foo = "bar"}
@@ -114,18 +127,25 @@ conditions = {baz = "qux", foo = "bar"}
 multipleRules =
     """
 [[redirects]]
-origin = "/"
-parameters = {}
-destination = "/foo"
+from = "/"
+to = "/foo"
 status = 301
 force = false
-conditions = {}
 
 [[redirects]]
-origin = "/"
-parameters = {}
-destination = "/foo"
+from = "/"
+to = "/foo"
 status = 301
 force = false
-conditions = {}
+"""
+
+
+ruleWithSignature =
+    """
+[[redirects]]
+from = "/"
+to = "/foo"
+status = 301
+force = false
+signed = "API_SIGNATURE_TOKEN"
 """

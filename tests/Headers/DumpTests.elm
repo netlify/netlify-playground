@@ -40,13 +40,13 @@ dumpRuleWithMultipleHeaders =
 simpleRules =
     """
 [[headers]]
-origin = "/"
-[[headers.values]]
+for = "/"
+[headers.values]
 X-Foo = "Bar"
 
 [[headers]]
-origin = "/*"
-[[headers.values]]
+for = "/*"
+[headers.values]
 X-Bar = "Baz"
 X-Baz = "Qux"
 """
@@ -55,8 +55,8 @@ X-Baz = "Qux"
 rulesWithMultipleHeaders =
     """
 [[headers]]
-origin = "/"
-[[headers.values]]
+for = "/"
+[headers.values]
 X-Foo = '''
 Bar, \\
 Baz, \\
