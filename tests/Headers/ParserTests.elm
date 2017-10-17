@@ -1,4 +1,4 @@
-module Headers.Tests exposing (..)
+module Headers.ParserTests exposing (..)
 
 import Array
 import Dict exposing (Dict)

@@ -1,4 +1,4 @@
-module Redirects.Tests exposing (..)
+module Redirects.ParserTests exposing (..)
 
 import Redirects.Parser exposing (..)
 import Redirects.Parser exposing (ParseResult, Rule, Target)
@@ -88,14 +88,14 @@ suite =
                     in
                         expectParsedRule rule <|
                             \rule -> Expect.equal ( 302, True, False ) ( rule.target.status, rule.target.force, rule.target.proxy )
-            , test "origin URL, parameters, target URL, status and filters" <|
+            , test "origin URL, parameters, target URL, status and conditions" <|
                 \() ->
                     let
                         rule =
                             filterRule "/foo qux=quux /bar 302! Country=en,es Language=es"
                     in
                         expectParsedRule rule <|
-                            \rule -> Expect.equal (Dict.fromList [ ( "Country", "en,es" ), ( "Language", "es" ) ]) (rule.filters)
+                            \rule -> Expect.equal (Dict.fromList [ ( "Country", "en,es" ), ( "Language", "es" ) ]) (rule.conditions)
             , test "origin URL and proxy target" <|
                 \() ->
                     let
@@ -111,7 +111,7 @@ suite =
                             filterRule "/foo /bar 302! # Country=en,es Language=es"
                     in
                         expectParsedRule rule <|
-                            \rule -> Expect.equal Dict.empty rule.filters
+                            \rule -> Expect.equal Dict.empty rule.conditions
             , test "/blog post=:id  /news post=:id 302" <|
                 \() ->
                     let

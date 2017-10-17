@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Messages exposing (Msg(..))
 import Models exposing (Rules)
+import Headers.Dump exposing (stringRule)
 import Headers.Parser exposing (Response, Rule, filterRules)
 import Partials
 
@@ -29,23 +30,44 @@ parse model =
         response =
             filterRules model.updatedText
     in
-        if List.length response.rules == 0 then
+        if List.isEmpty response.rules then
             div [ class "results empty-data" ] []
         else
-            Partials.renderResults (resultHeader response) (List.map renderErrorRules response.rules) ParseHeaders
+            Partials.renderResults (resultHeader response) (resultsBody response) ParseHeaders
+
+
+resultsBody : Response -> List (Html msg)
+resultsBody response =
+    let
+        ( withoutErrors, withErrors ) =
+            List.partition (\r -> List.isEmpty r.invalid) response.rules
+    in
+        if List.isEmpty withErrors then
+            List.map renderSuccessRules withoutErrors
+        else
+            List.map renderErrorRules withErrors
+
+
+renderSuccessRules : Rule -> Html msg
+renderSuccessRules rule =
+    let
+        parts =
+            String.split "\n" (stringRule rule)
+
+        divs =
+            List.map (\s -> div [] [ (text s) ]) parts
+    in
+        div [ class "parse-result structured" ] divs
 
 
 renderErrorRules : Rule -> Html msg
 renderErrorRules rule =
-    if List.length rule.invalid > 0 then
-        div [ class "parse-result error" ]
-            [ div []
-                [ p [] [ text (rule.path ++ " :") ]
-                , ul [] (List.map (\s -> li [] [ text s ]) rule.invalid)
-                ]
+    div [ class "parse-result error" ]
+        [ div []
+            [ p [] [ text (rule.path ++ " :") ]
+            , ul [] (List.map (\s -> li [] [ text s ]) rule.invalid)
             ]
-    else
-        div [] []
+        ]
 
 
 resultHeader : Response -> Html msg

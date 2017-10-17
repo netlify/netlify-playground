@@ -1,4 +1,4 @@
-module Headers.Parser exposing (Response, Rule, filterRules)
+module Headers.Parser exposing (Response, Rule, Values, filterRules)
 
 import Array
 import Dict exposing (Dict)
