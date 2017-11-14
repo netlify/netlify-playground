@@ -15,4 +15,4 @@ validPattern part =
 
 validStatus : String -> Bool
 validStatus status =
-    (contains (regex "^200|301|302|303|307|404!?$") status)
+    (contains (regex "^200|301|302|303|307|404|4\\d\\d!?$") status)
