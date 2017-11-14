@@ -127,6 +127,14 @@ suite =
                     in
                         expectParsedRule rule <|
                             \rule -> Expect.equal ( 200, False ) ( rule.target.status, rule.target.proxy )
+            , test "410 redirect" <|
+                \() ->
+                    let
+                        rule =
+                            filterRule "/foo /410.html 410"
+                    in
+                        expectParsedRule rule <|
+                            \rule -> Expect.equal ( 410, False ) ( rule.target.status, rule.target.proxy )
             ]
         ]
 
