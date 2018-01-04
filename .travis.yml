@@ -14,6 +14,6 @@ cache:
     - tests/elm-stuff/build-artifacts
 
 install:
-  - npm -g install elm@$ELM_VERSION elm-test@ELM_TEST_VERSION
+  - npm -g install elm@$ELM_VERSION elm-test@$ELM_TEST_VERSION
   - make deps
 script: make all
