@@ -2,6 +2,7 @@ module Redirects.Dump exposing (dump, stringRule)
 
 import Dict exposing (Dict)
 import Erl
+import Http exposing (decodeUri)
 import List
 import Redirects.Parser exposing (Rule, Conditions)
 
@@ -32,20 +33,39 @@ concatRule head tail response =
 
 stringRule : Rule -> String
 stringRule rule =
-    "\n[[redirects]]"
-        ++ "\nfrom = \""
-        ++ (Erl.toString rule.origin)
-        ++ "\""
-        ++ (mapQuery rule.params "query")
-        ++ "\nto = \""
-        ++ (Erl.toString rule.target.url)
-        ++ "\""
-        ++ "\nstatus = "
-        ++ (String.toLower (toString rule.target.status))
-        ++ "\nforce = "
-        ++ (String.toLower (toString rule.target.force))
-        ++ (mapConditions rule.conditions)
-        ++ "\n"
+    let
+        fromS =
+            Erl.toString rule.origin
+
+        from =
+            fromS |> decodeUri |> Maybe.withDefault fromS
+
+        toS =
+            Erl.toString rule.target.url
+
+        to =
+            toS |> decodeUri |> Maybe.withDefault toS
+
+        status =
+            rule.target.status |> toString |> String.toLower
+
+        force =
+            rule.target.force |> toString |> String.toLower
+    in
+        "\n[[redirects]]"
+            ++ "\nfrom = \""
+            ++ from
+            ++ "\""
+            ++ (mapQuery rule.params "query")
+            ++ "\nto = \""
+            ++ to
+            ++ "\""
+            ++ "\nstatus = "
+            ++ status
+            ++ "\nforce = "
+            ++ force
+            ++ (mapConditions rule.conditions)
+            ++ "\n"
 
 
 mapQuery : Conditions -> String -> String
