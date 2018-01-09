@@ -21,6 +21,8 @@ suite =
             \() -> Expect.equal multipleRules dumpMultipleRules
         , test "rule with signature" <|
             \() -> Expect.equal ruleWithSignature dumpRuleWithSignature
+        , test "rule with placeholders" <|
+            \() -> Expect.equal ruleWithPlaceholders dumpRuleWithPlaceholders
         ]
 
 
@@ -91,6 +93,17 @@ dumpRuleWithSignature =
         dump [ rule ]
 
 
+dumpRuleWithPlaceholders =
+    let
+        target =
+            (Target (Erl.parse "https://example.com/:place2/:place1/:splat") 301 False False)
+
+        rule =
+            (Rule (Erl.parse "https://example.com/:place1/:place2/*") Dict.empty target Dict.empty)
+    in
+        dump [ rule ]
+
+
 simpleRule =
     """
 [[redirects]]
@@ -148,4 +161,14 @@ to = "/foo"
 status = 301
 force = false
 signed = "API_SIGNATURE_TOKEN"
+"""
+
+
+ruleWithPlaceholders =
+    """
+[[redirects]]
+from = "https://example.com/:place1/:place2/*"
+to = "https://example.com/:place2/:place1/:splat"
+status = 301
+force = false
 """
