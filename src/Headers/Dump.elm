@@ -53,17 +53,29 @@ stringValue values =
             ""
 
         [ header ] ->
-            "\"" ++ header ++ "\""
+            quote header
 
         head :: tail ->
-            "'''\n"
-                ++ head
-                ++ ", \\\n"
-                ++ (String.join ", \\\n" tail)
-                ++ "'''"
+            let
+                rest =
+                    (List.map quote tail) |> String.join ",\n"
+            in
+                "[\n"
+                    ++ (quote head)
+                    ++ ",\n"
+                    ++ rest
+                    ++ "\n]"
 
 
 stringList : List ( String, String ) -> String
 stringList values =
     List.map (\( key, value ) -> "\n" ++ key ++ " = " ++ value) values
         |> String.join ""
+
+
+quote : String -> String
+quote string =
+    if String.startsWith "\"" string && String.endsWith "\"" string then
+        string
+    else
+        "\"" ++ string ++ "\""
