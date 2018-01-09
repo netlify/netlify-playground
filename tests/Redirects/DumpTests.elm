@@ -96,10 +96,10 @@ dumpRuleWithSignature =
 dumpRuleWithPlaceholders =
     let
         target =
-            (Target (Erl.parse "/:place2/:place1/:splat") 301 False False)
+            (Target (Erl.parse "https://example.com/:place2/:place1/:splat") 301 False False)
 
         rule =
-            (Rule (Erl.parse "/:place1/:place2/*") Dict.empty target Dict.empty)
+            (Rule (Erl.parse "https://example.com/:place1/:place2/*") Dict.empty target Dict.empty)
     in
         dump [ rule ]
 
@@ -167,8 +167,8 @@ signed = "API_SIGNATURE_TOKEN"
 ruleWithPlaceholders =
     """
 [[redirects]]
-from = "/:place1/:place2/*"
-to = "/:place2/:place1/:splat"
+from = "https://example.com/:place1/:place2/*"
+to = "https://example.com/:place2/:place1/:splat"
 status = 301
 force = false
 """
