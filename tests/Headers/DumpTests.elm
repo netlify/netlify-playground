@@ -15,6 +15,10 @@ suite =
             \() -> Expect.equal simpleRules dumpSimpleRules
         , test "rule with multiple headers" <|
             \() -> Expect.equal rulesWithMultipleHeaders dumpRuleWithMultipleHeaders
+        , test "rule with quotes" <|
+            \() -> Expect.equal rulesWithQuotes dumpRuleWithQuotes
+        , test "rule with multilines" <|
+            \() -> Expect.equal rulesWithMultilines dumpRuleWithMultilines
         ]
 
 
@@ -32,6 +36,34 @@ dumpRuleWithMultipleHeaders =
     let
         rules =
             [ (Rule "/" (Dict.fromList [ ( "X-Foo", [ "Bar", "Baz", "Qux" ] ) ]) [])
+            ]
+    in
+        dump rules
+
+
+dumpRuleWithQuotes =
+    let
+        rules =
+            [ (Rule "/*.txt" (Dict.fromList [ ( "Link", [ "\"<http://mydomain.com/plaintext.css>;rel=stylesheet;type=text/css;media=all\"" ] ) ]) [])
+            ]
+    in
+        dump rules
+
+
+dumpRuleWithMultilines =
+    let
+        rules =
+            [ (Rule "/*.txt"
+                (Dict.fromList
+                    [ ( "Link"
+                      , [ "\"<http://mydomain.com/plaintext.css>;rel=stylesheet;type=text/css;media=all\""
+                        , "\"<http://mydomain.com/plaintext.css>;rel=stylesheet;type=text/css;media=all\""
+                        ]
+                      )
+                    ]
+                )
+                []
+              )
             ]
     in
         dump rules
@@ -57,8 +89,30 @@ rulesWithMultipleHeaders =
 [[headers]]
 for = "/"
 [headers.values]
-X-Foo = '''
-Bar, \\
-Baz, \\
-Qux'''
+X-Foo = [
+"Bar",
+"Baz",
+"Qux"
+]
+"""
+
+
+rulesWithQuotes =
+    """
+[[headers]]
+for = "/*.txt"
+[headers.values]
+Link = "<http://mydomain.com/plaintext.css>;rel=stylesheet;type=text/css;media=all"
+"""
+
+
+rulesWithMultilines =
+    """
+[[headers]]
+for = "/*.txt"
+[headers.values]
+Link = [
+"<http://mydomain.com/plaintext.css>;rel=stylesheet;type=text/css;media=all",
+"<http://mydomain.com/plaintext.css>;rel=stylesheet;type=text/css;media=all"
+]
 """
