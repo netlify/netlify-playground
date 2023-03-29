@@ -1,9 +1,5 @@
-[build]
-  command = "npm run build && npm run copy-redirects"
-  publish = "dist"
-
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "https://redirects-playground.netlify.app/"
+  status = 301
   force = true
