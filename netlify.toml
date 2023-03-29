@@ -4,6 +4,6 @@
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "https://redirects-playground.netlify.app/"
+  status = 301
   force = true
