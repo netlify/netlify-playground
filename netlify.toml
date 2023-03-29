@@ -1,7 +1,3 @@
-[build]
-  # command = "npm run build && npm run copy-redirects"
-  publish = "dist"
-
 [[redirects]]
   from = "/*"
   to = "https://redirects-playground.netlify.app/"
